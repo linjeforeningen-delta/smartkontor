@@ -5,13 +5,13 @@ Created on Thu Apr  4 19:43:05 2019
 @author: jhl
 """
 
-from lxml import html, etree
+from lxml import html
 import requests
 
 HANGAREN_INDEX = 13
 REALFAG_INDEX = 17
 
-def getOpeningHours():
+def getCantinaHours():
     
     page = requests.get('https://www.sit.no/mat')
     #page = requests.get('https://bartebuss.no/NSR:Quay:75708')
