@@ -13,7 +13,7 @@ class DeltaWall:
         self.master = master
         master.title("A simple GUI")
         
-        self.cantina_hours = Label(master, text="This is our first GUI!")
+        self.cantina_hours = Label(master, text="cantina_hours_string")
         self.cantina_hours.pack()
 
         self.close_button = Button(master, text="Close", command=master.quit)
@@ -57,7 +57,7 @@ class DeltaWall:
         
     def updateHourly(self): #Include everything that should be updated hourly in this function
         self.updateCantinaHours()
-        self.cantina_hours.after(5000, self.updateHourly)
+        self.cantina_hours.after(3600000, self.updateHourly)
 
 root = Tk()
 root.attributes("-fullscreen", True)
