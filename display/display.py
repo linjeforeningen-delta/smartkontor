@@ -75,27 +75,31 @@ class DeltaWall:
 #            item_time = QTableWidgetItem(b_times[i])
 #            self.brochs_bus_table.setItem(i,2,item_time)
         
-    def updateClock(self):
+    def periodicUpdateClock(self):
         self.showTime()
-        self.clock.after(500, self.updateClock)
+        self.clock.after(500, self.periodicUpdateClock)
         
             
     def updateCantinaHours(self):
         realfag_hours, hangaren_hours = getCantinaHours()
         self.cantina_hours['text'] = "Kantinetider: \n Realfag: " + realfag_hours + " \n Hangaren: " + hangaren_hours
         
-    def updateHourly(self): #Include everything that should be updated hourly in this function
-        self.updateCantinaHours()
-        self.cantina_hours.after(3600000, self.updateHourly)
+    def periodicUpdateHourly(self): #Include everything that should be updated hourly in this function
+        try:
+            self.updateCantinaHours()
+        finally:
+            self.cantina_hours.after(3600000, self.periodicUpdateHourly)
         
-    def update20s(self):
-        self.updateBuses()
-        self.glos_estimated_calls[0].after(20000, self.update20s)
+    def periodicUpdate20s(self):
+        try:
+            self.updateBuses()
+        finally:
+            self.glos_estimated_calls[0].after(20000, self.periodicUpdate20s)
 
 root = Tk()
 root.attributes("-fullscreen", True)
 deltaWall = DeltaWall(root)
-deltaWall.updateClock()
-deltaWall.update20s()
-deltaWall.updateHourly()
+deltaWall.periodicUpdateClock()
+deltaWall.periodicUpdate20s()
+deltaWall.periodicUpdateHourly()
 root.mainloop()
