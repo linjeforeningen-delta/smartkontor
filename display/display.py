@@ -1,5 +1,5 @@
-from tkinter import Tk, Label, Button
-import time
+from tkinter import Tk, Label
+from datetime import datetime
 
 from bussapi import getBuses
 from cantinahours import getCantinaHours
@@ -49,12 +49,12 @@ class DeltaWall:
 #        self.close_button.pack()
         
     def showTime(self):
-        time = ""#QTime.currentTime()
-        text = time.toString('hh:mm')
-        if (time.second() % 2) == 0:
+        current_time = datetime.now()
+        text = current_time.isoformat()[11:16]
+        if (current_time.second % 2) == 0:
             text = text[:2] + " " + text[3:]
         
-        self.clock.setText(text)
+        self.clock['text'] = text
         
     def updateBuses(self):
         g_lines, g_destinations, g_times = getBuses(GLOSHAUGEN_STOP, NUMBER_OF_CALLS)
@@ -77,7 +77,7 @@ class DeltaWall:
         
     def updateClock(self):
         self.showTime()
-        self.clock.after(200, self.updateClock)
+        self.clock.after(500, self.updateClock)
         
             
     def updateCantinaHours(self):
@@ -95,6 +95,7 @@ class DeltaWall:
 root = Tk()
 root.attributes("-fullscreen", True)
 deltaWall = DeltaWall(root)
+deltaWall.updateClock()
 deltaWall.update20s()
 deltaWall.updateHourly()
 root.mainloop()
