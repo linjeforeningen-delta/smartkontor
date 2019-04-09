@@ -1,4 +1,4 @@
-from tkinter import Tk, Label
+from tkinter import Tk, Label, W, Canvas
 from datetime import datetime
 
 from bussapi import getBuses
@@ -15,31 +15,38 @@ class DeltaWall:
     def __init__(self, master):
         
         master.configure(background=BACKGROUND_COLOR)
-        master.columnconfigure(0, weight=5)
-        master.columnconfigure(1, weight=1)
-        master.columnconfigure(2, weight=3)
-        master.columnconfigure(3, weight=1)
+        master.columnconfigure(0, weight=10)
+        master.columnconfigure(1, weight=2)
+        master.columnconfigure(2, weight=8)
+        master.columnconfigure(3, weight=2)
+        master.columnconfigure(4, weight=2)
         self.master = master
         
         busfont = ("Lucidia Console", 40)
+        clockfont = ("Consolas", 40)
+        
+        self.delta_logo = Canvas(master, width=260, height=150, bg=BACKGROUND_COLOR, highlightthickness=0)
+        self.delta_logo.grid(row=0, column=0, rowspan=2, sticky=W)
+        self.delta_logo.create_polygon(10,140, 250,140, 130,10, 65,75, 105,75,
+                                       130,50, 190,115, 35,115, fill='green')
         
         
-        self.clock = Label(master, text="00:00", font=busfont, bg=BACKGROUND_COLOR)
+        self.clock = Label(master, text="00:00", font=clockfont, bg=BACKGROUND_COLOR)
         self.clock.grid(row=0, column=4)
         
-        self.cantina_hours = Label(master, text="cantina_hours_string", font=busfont, bg=BACKGROUND_COLOR)
-        self.cantina_hours.grid(row=2, column=0, rowspan=4, sticky='w')
+        self.cantina_hours = Label(master, text="cantina_hours_placeholder", font=busfont, bg=BACKGROUND_COLOR)
+        self.cantina_hours.grid(row=2, column=0, rowspan=4)
         
         self.glos_label = Label(master, text="Gløshaugen:", font=busfont, bg=BACKGROUND_COLOR)
-        self.glos_label.grid(row=1, column=1)
+        self.glos_label.grid(row=1, column=2)
         
         self.glos_estimated_calls = []
         for i in range(NUMBER_OF_CALLS):
-            individual_call_line = Label(master, text="Bus placeholder", font=busfont, bg=BACKGROUND_COLOR)
-            individual_call_dest = Label(master, text="Bus placeholder", font=busfont, bg=BACKGROUND_COLOR)
-            individual_call_time = Label(master, text="Bus placeholder", font=busfont, bg=BACKGROUND_COLOR)
+            individual_call_line = Label(master, text="line_placeholder", font=busfont, bg=BACKGROUND_COLOR)
+            individual_call_dest = Label(master, text="dest_placeholder", font=busfont, bg=BACKGROUND_COLOR, anchor=W)
+            individual_call_time = Label(master, text="time_placeholder", font=busfont, bg=BACKGROUND_COLOR)
             individual_call_line.grid(row=2+i, column=1)
-            individual_call_dest.grid(row=2+i, column=2)
+            individual_call_dest.grid(row=2+i, column=2, sticky=W)
             individual_call_time.grid(row=2+i, column=3)
             self.glos_estimated_calls.append(individual_call_line)
             self.glos_estimated_calls.append(individual_call_dest)
@@ -76,8 +83,10 @@ class DeltaWall:
 #            self.brochs_bus_table.setItem(i,2,item_time)
         
     def periodicUpdateClock(self):
-        self.showTime()
-        self.clock.after(500, self.periodicUpdateClock)
+        try:
+            self.showTime()
+        finally:
+            self.clock.after(500, self.periodicUpdateClock)
         
             
     def updateCantinaHours(self):
