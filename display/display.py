@@ -81,8 +81,8 @@ class DeltaWall:
         now = datetime.now()
         now_hour = now.hour
         now_minute = now.minute
-        if now_hour == 23 and bus_hour == 0:
-            bus_hour = 24 #Do calculations as if the time is 24:mm instead of 00:mm
+        if now_hour > bus_hour: 
+            bus_hour = bus_hour + 24 #Set bus hour to properly be tomorrow
         time_left = (bus_hour - now_hour)*60 + (bus_minute - now_minute)
         if time_left == 0:
             return_str = "Nå"
