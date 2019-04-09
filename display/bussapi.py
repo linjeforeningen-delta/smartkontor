@@ -40,7 +40,7 @@ def busApi(busStop, num_calls):
         response = urllib.request.urlopen(req, timeout=CONNECT_TIMEOUT_SECONDS)
         return response.read().decode('utf-8')
     
-    now = datetime.now().isoformat(timespec='seconds')
+    now = datetime.now().isoformat()[0:19]
     
     query = """
         {
