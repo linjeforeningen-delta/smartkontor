@@ -84,10 +84,13 @@ class DeltaWall:
         if now_hour == 23 and bus_hour == 0:
             bus_hour = 24 #Do calculations as if the time is 24:mm instead of 00:mm
         time_left = (bus_hour - now_hour)*60 + (bus_minute - now_minute)
-        if time_left <= 10:
+        if time_left == 0:
+            return_str = "Nå"
+        elif time_left <= 9:
             return_str = str(time_left) + " min"
         return return_str
         
+#Old code from PyQt
 #        for i in range(NUMBER_OF_CALLS):
 #            item_line = QTableWidgetItem(b_lines[i])
 #            item_line.setTextAlignment(Qt.AlignCenter)
