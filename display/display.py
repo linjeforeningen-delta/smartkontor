@@ -47,7 +47,7 @@ class DeltaWall:
             individual_call_time = Label(master, text="time_placeholder", font=busfont, bg=BACKGROUND_COLOR)
             individual_call_line.grid(row=2+i, column=1)
             individual_call_dest.grid(row=2+i, column=2, sticky=W)
-            individual_call_time.grid(row=2+i, column=3)
+            individual_call_time.grid(row=2+i, column=3, columnspan=2)
             self.glos_estimated_calls.append(individual_call_line)
             self.glos_estimated_calls.append(individual_call_dest)
             self.glos_estimated_calls.append(individual_call_time)
@@ -71,8 +71,23 @@ class DeltaWall:
         for i in range(NUMBER_OF_CALLS):
             self.glos_estimated_calls[i*3]['text'] = g_lines[i]
             self.glos_estimated_calls[i*3 + 1]['text'] = g_destinations[i]
-            self.glos_estimated_calls[i*3 + 2]['text'] = g_times[i]
-#            
+            display_time = self.busTimesToString(g_times[i])
+            self.glos_estimated_calls[i*3 + 2]['text'] = display_time
+
+    def busTimesToString(self,bus_time): #misleading name, as bus times are already a string
+        return_str = bus_time
+        bus_hour = int(bus_time[:2])
+        bus_minute = int(bus_time[3:])
+        now = datetime.now()
+        now_hour = now.hour
+        now_minute = now.minute
+        if now_hour == 23 and bus_hour == 0:
+            bus_hour = 24 #Do calculations as if the time is 24:mm instead of 00:mm
+        time_left = (bus_hour - now_hour)*60 + (bus_minute - now_minute)
+        if time_left <= 10:
+            return_str = str(time_left) + " min"
+        return return_str
+        
 #        for i in range(NUMBER_OF_CALLS):
 #            item_line = QTableWidgetItem(b_lines[i])
 #            item_line.setTextAlignment(Qt.AlignCenter)
