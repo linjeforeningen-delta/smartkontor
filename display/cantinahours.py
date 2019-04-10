@@ -19,10 +19,13 @@ def getCantinaHours():
     tree = html.fromstring(page.content)
     
     open_hours = tree.xpath('//div[@class="eat-hours"]/text()')
+    for i, c in enumerate(open_hours[REALFAG_INDEX]):
+        if c.isdigit():
+            time_start_index = i
+            break
     realfag_hours = ""
     hangaren_hours = ""
-    for i in range(12,23):
+    for i in range(time_start_index,(time_start_index + 11)):
         realfag_hours += open_hours[REALFAG_INDEX][i]
         hangaren_hours += open_hours[HANGAREN_INDEX][i]
     return realfag_hours, hangaren_hours
-    
