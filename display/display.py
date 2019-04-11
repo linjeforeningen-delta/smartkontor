@@ -9,7 +9,7 @@ GLOSHAUGEN_STOP = 'NSR:StopPlace:44085'
 PROF_BROCHS_STOP = 'NSR:StopPlace:41620'
 NUMBER_OF_CALLS = 10
 
-BACKGROUND_COLOR = 'cyan'
+BACKGROUND_COLOR = 'white'
 
 class DeltaWall:
     def __init__(self, master):

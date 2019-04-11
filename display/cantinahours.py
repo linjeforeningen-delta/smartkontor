@@ -8,8 +8,8 @@ Created on Thu Apr  4 19:43:05 2019
 from lxml import html
 import requests
 
-HANGAREN_INDEX = 13
-REALFAG_INDEX = 17
+HANGAREN_INDEX = 12
+REALFAG_INDEX = 16
 
 def getCantinaHours():
     
