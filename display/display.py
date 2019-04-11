@@ -2,14 +2,14 @@ from tkinter import Tk, Label, W, Canvas
 from datetime import datetime
 
 from bussapi import getBuses
-from cantinahours import getCantinaHours
+from cantinahours import getCantinaInfo
 
 
 GLOSHAUGEN_STOP = 'NSR:StopPlace:44085'
 PROF_BROCHS_STOP = 'NSR:StopPlace:41620'
 NUMBER_OF_CALLS = 10
 
-BACKGROUND_COLOR = 'cyan'
+BACKGROUND_COLOR = 'white'
 
 class DeltaWall:
     def __init__(self, master):
@@ -23,6 +23,7 @@ class DeltaWall:
         self.master = master
         
         busfont = ("Lucidia Console", 40)
+        cantinafont = busfont
         clockfont = ("DejaVuSansMono", 40)
         
         self.delta_logo = Canvas(master, width=260, height=150, bg=BACKGROUND_COLOR, highlightthickness=0)
@@ -34,8 +35,19 @@ class DeltaWall:
         self.clock = Label(master, text="00:00", font=clockfont, bg=BACKGROUND_COLOR)
         self.clock.grid(row=0, column=4)
         
-        self.cantina_hours = Label(master, text="cantina_hours_placeholder", font=busfont, bg=BACKGROUND_COLOR)
-        self.cantina_hours.grid(row=2, column=0, rowspan=4)
+        
+        self.cantina_title = Label(master, text="Kantine:", font=cantinafont, bg=BACKGROUND_COLOR)
+        self.cantina_title.grid(row=2, column=0)
+        
+        self.cantina_labels = []
+        for i in range(2):
+            cantina_time = Label(master, text="time_placeholder", font=cantinafont, bg=BACKGROUND_COLOR, anchor=W)
+            cantina_food = Label(master, text="food_placeholder", font=cantinafont, bg=BACKGROUND_COLOR, anchor=W)
+            cantina_time.grid(row=3+(2*i), column=0, sticky=W)
+            cantina_food.grid(row=4+(2*i), column=0, sticky=W)
+            self.cantina_labels.append(cantina_time)
+            self.cantina_labels.append(cantina_food)
+        
         
         self.glos_label = Label(master, text="Gløshaugen:", font=busfont, bg=BACKGROUND_COLOR)
         self.glos_label.grid(row=1, column=2)
@@ -51,9 +63,7 @@ class DeltaWall:
             self.glos_estimated_calls.append(individual_call_line)
             self.glos_estimated_calls.append(individual_call_dest)
             self.glos_estimated_calls.append(individual_call_time)
-
-#        self.close_button = Button(master, text="Close", command=master.quit)
-#        self.close_button.pack()
+        
         
     def showTime(self):
         current_time = datetime.now()
@@ -62,6 +72,7 @@ class DeltaWall:
             text = text[:2] + " " + text[3:]
         
         self.clock['text'] = text
+        
         
     def updateBuses(self):
         g_lines, g_destinations, g_times = getBuses(GLOSHAUGEN_STOP, NUMBER_OF_CALLS)
@@ -73,6 +84,7 @@ class DeltaWall:
             self.glos_estimated_calls[i*3 + 1]['text'] = g_destinations[i]
             display_time = self.busTimesToString(g_times[i])
             self.glos_estimated_calls[i*3 + 2]['text'] = display_time
+
 
     def busTimesToString(self,bus_time): #misleading name, as bus times are already a string
         return_str = bus_time
@@ -89,16 +101,7 @@ class DeltaWall:
         elif time_left <= 9:
             return_str = str(time_left) + " min"
         return return_str
-        
-#Old code from PyQt
-#        for i in range(NUMBER_OF_CALLS):
-#            item_line = QTableWidgetItem(b_lines[i])
-#            item_line.setTextAlignment(Qt.AlignCenter)
-#            self.brochs_bus_table.setItem(i,0,item_line)
-#            item_dest = QTableWidgetItem(b_destinations[i])
-#            self.brochs_bus_table.setItem(i,1,item_dest)
-#            item_time = QTableWidgetItem(b_times[i])
-#            self.brochs_bus_table.setItem(i,2,item_time)
+    
         
     def periodicUpdateClock(self):
         try:
@@ -108,14 +111,16 @@ class DeltaWall:
         
             
     def updateCantinaHours(self):
-        realfag_hours, hangaren_hours = getCantinaHours()
-        self.cantina_hours['text'] = "Kantinetider: \n Realfag: " + realfag_hours + " \n Hangaren: " + hangaren_hours
+        realfag_hours, hangaren_hours, realfag_food, hangaren_food = getCantinaInfo()
+        self.cantina_labels[0]['text'] = "Realfag: " + realfag_hours
+        self.cantina_labels[2]['text'] = "Hangern: " + hangaren_hours
+
         
     def periodicUpdateHourly(self): #Include everything that should be updated hourly in this function
         try:
             self.updateCantinaHours()
         finally:
-            self.cantina_hours.after(3600000, self.periodicUpdateHourly)
+            self.cantina_title.after(3600000, self.periodicUpdateHourly)
         
     def periodicUpdate20s(self):
         try:
