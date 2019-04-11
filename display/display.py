@@ -22,7 +22,7 @@ class DeltaWall:
         master.columnconfigure(4, weight=2)
         self.master = master
         
-        busfont = ("Lucidia Console", 40)
+        busfont = ("Lucidia Console", 36)
         clockfont = ("DejaVuSansMono", 40)
         
         self.delta_logo = Canvas(master, width=260, height=150, bg=BACKGROUND_COLOR, highlightthickness=0)
