@@ -52,8 +52,6 @@ class DeltaWall:
             self.glos_estimated_calls.append(individual_call_dest)
             self.glos_estimated_calls.append(individual_call_time)
 
-#        self.close_button = Button(master, text="Close", command=master.quit)
-#        self.close_button.pack()
         
     def showTime(self):
         current_time = datetime.now()
@@ -61,7 +59,8 @@ class DeltaWall:
         if (current_time.second % 2) == 0:
             text = text[:2] + " " + text[3:]
         
-        self.clock['text'] = text
+        if (self.clock['text'] != text):
+            self.clock['text'] = text
         
     def updateBuses(self):
         g_lines, g_destinations, g_times = getBuses(GLOSHAUGEN_STOP, NUMBER_OF_CALLS)
@@ -89,22 +88,13 @@ class DeltaWall:
         elif time_left <= 9:
             return_str = str(time_left) + " min"
         return return_str
-        
-#Old code from PyQt
-#        for i in range(NUMBER_OF_CALLS):
-#            item_line = QTableWidgetItem(b_lines[i])
-#            item_line.setTextAlignment(Qt.AlignCenter)
-#            self.brochs_bus_table.setItem(i,0,item_line)
-#            item_dest = QTableWidgetItem(b_destinations[i])
-#            self.brochs_bus_table.setItem(i,1,item_dest)
-#            item_time = QTableWidgetItem(b_times[i])
-#            self.brochs_bus_table.setItem(i,2,item_time)
+    
         
     def periodicUpdateClock(self):
         try:
             self.showTime()
         finally:
-            self.clock.after(500, self.periodicUpdateClock)
+            self.clock.after(200, self.periodicUpdateClock)
         
             
     def updateCantinaHours(self):
