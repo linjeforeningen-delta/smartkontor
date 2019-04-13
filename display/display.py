@@ -1,5 +1,6 @@
 from tkinter import Tk, Label, W, Canvas
 from datetime import datetime
+from six.moves import urllib
 
 from bussapi import getBuses
 from cantinahours import getCantinaHours
@@ -34,7 +35,7 @@ class DeltaWall:
         self.clock = Label(master, text="00:00", font=clockfont, bg=BACKGROUND_COLOR)
         self.clock.grid(row=0, column=4)
         
-        self.cantina_hours = Label(master, text="cantina_hours_placeholder", font=busfont, bg=BACKGROUND_COLOR)
+        self.cantina_hours = Label(master, text="cantina_hours", font=busfont, bg=BACKGROUND_COLOR)
         self.cantina_hours.grid(row=2, column=0, rowspan=4)
         
         self.glos_label = Label(master, text="Gløshaugen:", font=busfont, bg=BACKGROUND_COLOR)
@@ -42,9 +43,9 @@ class DeltaWall:
         
         self.glos_estimated_calls = []
         for i in range(NUMBER_OF_CALLS):
-            individual_call_line = Label(master, text="line_placeholder", font=busfont, bg=BACKGROUND_COLOR)
+            individual_call_line = Label(master, text="000", font=busfont, bg=BACKGROUND_COLOR)
             individual_call_dest = Label(master, text="dest_placeholder", font=busfont, bg=BACKGROUND_COLOR, anchor=W)
-            individual_call_time = Label(master, text="time_placeholder", font=busfont, bg=BACKGROUND_COLOR)
+            individual_call_time = Label(master, text="00:00", font=busfont, bg=BACKGROUND_COLOR)
             individual_call_line.grid(row=2+i, column=1)
             individual_call_dest.grid(row=2+i, column=2, sticky=W)
             individual_call_time.grid(row=2+i, column=3, columnspan=2)
@@ -116,7 +117,12 @@ class DeltaWall:
 root = Tk()
 root.attributes("-fullscreen", True)
 deltaWall = DeltaWall(root)
-deltaWall.periodicUpdateClock()
-deltaWall.periodicUpdate20s()
-deltaWall.periodicUpdateHourly()
+try:
+    deltaWall.periodicUpdateClock()
+    deltaWall.periodicUpdate20s()
+    deltaWall.periodicUpdateHourly()
+except urllib.error.URLError as networkerror:
+    print(networkerror)
+except:
+    print("Unknown error")
 root.mainloop()
