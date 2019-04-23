@@ -54,4 +54,4 @@ def getCantinaHours():
         
     for i in range(realfag_time_start_index,(realfag_time_start_index + 11)):    
         realfag_hours += open_hours[REALFAG_LIST_INDEX][i]
-    return realfag_hours, hangaren_hours, open_hours_raw
+    return realfag_hours, hangaren_hours
