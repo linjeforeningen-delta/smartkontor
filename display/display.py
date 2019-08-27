@@ -1,6 +1,7 @@
 from tkinter import Tk, Label, W, Canvas
 from datetime import datetime
 from six.moves import urllib
+import math
 
 from bussapi import getBuses
 from cantinahours import getCantinaHours
@@ -9,6 +10,8 @@ from cantinahours import getCantinaHours
 GLOSHAUGEN_STOP = 'NSR:StopPlace:44085'
 PROF_BROCHS_STOP = 'NSR:StopPlace:41620'
 NUMBER_OF_CALLS = 10
+
+FONTSIZE_CONSTANT = 42
 
 BACKGROUND_COLOR = 'white'
 
@@ -23,7 +26,12 @@ class DeltaWall:
         master.columnconfigure(4, weight=2)
         self.master = master
         
-        busfont = ("Lucidia Console", 36)
+        screen_width = master.winfo_screenwidth()
+        screen_height = master.winfo_screenheight()
+        
+        busfontSize = math.floor(screen_width/FONTSIZE_CONSTANT)
+        
+        busfont = ("Lucidia Console", busfontSize)
         clockfont = ("DejaVuSansMono", 40)
         
         self.delta_logo = Canvas(master, width=260, height=150, bg=BACKGROUND_COLOR, highlightthickness=0)
@@ -37,6 +45,9 @@ class DeltaWall:
         
         self.cantina_hours = Label(master, text="cantina_hours", font=busfont, bg=BACKGROUND_COLOR)
         self.cantina_hours.grid(row=2, column=0, rowspan=4)
+        
+        self.screen_size = Label(master, text="Size: " + str(screen_width) + "x" + str(screen_height), font=busfont, bg=BACKGROUND_COLOR)
+        self.screen_size.grid(row=5, column=0, rowspan=4)
         
         self.glos_label = Label(master, text="Gløshaugen:", font=busfont, bg=BACKGROUND_COLOR)
         self.glos_label.grid(row=1, column=2)
@@ -95,7 +106,7 @@ class DeltaWall:
         try:
             self.showTime()
         finally:
-            self.clock.after(200, self.periodicUpdateClock)
+            self.clock.after(200, self.periodicUpdateClock) #After 200ms, this function calls itself
         
             
     def updateCantinaHours(self):
