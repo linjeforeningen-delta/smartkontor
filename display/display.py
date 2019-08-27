@@ -27,7 +27,7 @@ class DeltaWall:
         self.master = master
         
         screen_width = master.winfo_screenwidth()
-        screen_height = master.winfo_screenheight()
+        #screen_height = master.winfo_screenheight()
         
         busfontSize = math.floor(screen_width/FONTSIZE_CONSTANT)
         
@@ -45,9 +45,6 @@ class DeltaWall:
         
         self.cantina_hours = Label(master, text="cantina_hours", font=busfont, bg=BACKGROUND_COLOR)
         self.cantina_hours.grid(row=2, column=0, rowspan=4)
-        
-        self.screen_size = Label(master, text="Size: " + str(screen_width) + "x" + str(screen_height), font=busfont, bg=BACKGROUND_COLOR)
-        self.screen_size.grid(row=5, column=0, rowspan=4)
         
         self.glos_label = Label(master, text="Gløshaugen:", font=busfont, bg=BACKGROUND_COLOR)
         self.glos_label.grid(row=1, column=2)
