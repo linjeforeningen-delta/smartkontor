@@ -126,9 +126,14 @@ root = Tk()
 root.attributes("-fullscreen", True)
 deltaWall = DeltaWall(root)
 try:
+    deltaWall.periodicUpdateHourly()
+except urllib.error.URLError as networkerror:
+    print(networkerror)
+except:
+    print("Unknown error")
+try:
     deltaWall.periodicUpdateClock()
     deltaWall.periodicUpdate20s()
-    deltaWall.periodicUpdateHourly()
 except urllib.error.URLError as networkerror:
     print(networkerror)
 except:

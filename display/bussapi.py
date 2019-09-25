@@ -29,7 +29,7 @@ def busApi(busStop, num_calls):
                 'ET-Client-Name': 'linjeforeningen_delta - infoplakat',
                 'ET-Client-ID': socket.gethostname()}
     
-    GRAPHQL_ENDPOINT = "https://api.entur.org/journeyplanner/2.0/index/graphql"
+    GRAPHQL_ENDPOINT = "https://api.entur.io/journey-planner/v2/graphql"
     CONNECT_TIMEOUT_SECONDS = 15
     
     def sendGraphqlQuery(query, variables):
