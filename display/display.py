@@ -5,7 +5,7 @@ import math
 
 from bussapi import getBuses
 from cantinahours import getCantinaHours
-from readSerial import readSerial, endSerial
+import serial
 
 
 GLOSHAUGEN_STOP = 'NSR:StopPlace:44085'
@@ -15,6 +15,8 @@ NUMBER_OF_CALLS = 10
 FONTSIZE_CONSTANT = 42
 
 BACKGROUND_COLOR = 'white'
+
+ser = serial.Serial('COM6', 9600, timeout=0, writeTimeout=0)
 
 class DeltaWall:
     def __init__(self, master):
@@ -46,6 +48,9 @@ class DeltaWall:
         
         self.cantina_hours = Label(master, text="cantina_hours", font=busfont, bg=BACKGROUND_COLOR)
         self.cantina_hours.grid(row=2, column=0, rowspan=4)
+
+        self.coffe_button = Label(master, text="Coffee made:\n No coffee made", font=busfont, bg=BACKGROUND_COLOR)
+        self.coffe_button.grid(row=7, column=0, rowspan=3)
         
         self.glos_label = Label(master, text="Gløshaugen:", font=busfont, bg=BACKGROUND_COLOR)
         self.glos_label.grid(row=1, column=2)
@@ -100,7 +105,19 @@ class DeltaWall:
         return return_str
 
     def readArduino(self):
-        readSerial()
+        while(True):
+            c = ser.read().decode('ASCII')
+            c.encode('utf-8')
+            if len(c) == 0:
+                break
+
+            if c == '\r':
+                c == ''
+
+            if c == 'C':
+
+                self.coffe_button['text'] = "Coffee made:\n" + datetime.now().isoformat()[11:16]
+        root.after(10, self.readArduino)
     
         
     def periodicUpdateClock(self):
@@ -123,7 +140,6 @@ class DeltaWall:
     def periodicUpdate20s(self):
         try:
             self.updateBuses()
-            self.readArduino()
         finally:
             self.glos_estimated_calls[0].after(20000, self.periodicUpdate20s)
 
@@ -143,4 +159,7 @@ except urllib.error.URLError as networkerror:
     print(networkerror)
 except:
     print("Unknown error")
+
+root.after(100, deltaWall.readArduino)
+
 root.mainloop()
