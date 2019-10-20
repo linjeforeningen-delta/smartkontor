@@ -164,7 +164,7 @@ except:
     print("Unknown error")
 
 try:
-    root.after(100, deltaWall.readArduino)
+    deltaWall.readArduino()
 except:
     print("Couldn't read Arduino")
 
