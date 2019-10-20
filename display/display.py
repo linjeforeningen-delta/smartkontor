@@ -16,7 +16,7 @@ FONTSIZE_CONSTANT = 42
 
 BACKGROUND_COLOR = 'white'
 
-ser = serial.Serial('COM6', 9600, timeout=0, writeTimeout=0)
+ser = serial.Serial('/dev/ttyCOM0', 9600, timeout=0, writeTimeout=0)
 
 class DeltaWall:
     def __init__(self, master):
