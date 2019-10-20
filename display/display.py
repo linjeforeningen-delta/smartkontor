@@ -5,6 +5,7 @@ import math
 
 from bussapi import getBuses
 from cantinahours import getCantinaHours
+from readSerial import readSerial, endSerial
 
 
 GLOSHAUGEN_STOP = 'NSR:StopPlace:44085'
@@ -97,6 +98,9 @@ class DeltaWall:
         elif time_left <= 9:
             return_str = str(time_left) + " min"
         return return_str
+
+    def readArduino(self):
+        readSerial()
     
         
     def periodicUpdateClock(self):
@@ -119,6 +123,7 @@ class DeltaWall:
     def periodicUpdate20s(self):
         try:
             self.updateBuses()
+            self.readArduino()
         finally:
             self.glos_estimated_calls[0].after(20000, self.periodicUpdate20s)
 
