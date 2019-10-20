@@ -16,7 +16,10 @@ FONTSIZE_CONSTANT = 42
 
 BACKGROUND_COLOR = 'white'
 
-ser = serial.Serial('/dev/ttyCOM0', 9600, timeout=0, writeTimeout=0)
+try:
+    ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0, writeTimeout=0)
+except:
+    print("No serial port connected")
 
 class DeltaWall:
     def __init__(self, master):
@@ -160,6 +163,9 @@ except urllib.error.URLError as networkerror:
 except:
     print("Unknown error")
 
-root.after(100, deltaWall.readArduino)
+try:
+    root.after(100, deltaWall.readArduino)
+except:
+    print("Couldn't read Arduino")
 
 root.mainloop()
