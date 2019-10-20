@@ -5,7 +5,7 @@ ports = list(serial.tools.list_ports.comports())
 for p in ports:
     print(p)
 
-ser = serial.Serial('/dev/ttyUSB0')
+ser = serial.Serial('/dev/ttyUSB0', 9600)
 
 def readSerial():
     line = ser.readline()
